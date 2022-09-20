@@ -11,8 +11,8 @@ __pycache__/
 *.so
 
 # Download folders
-..buttersafe_downloads/
-..exocomics_download/
+.buttersafe/buttersafe_downloads/
+.exocomics/exocomics_download/
 .left_handed_toons_downlods/
 .lunarbaboon_downloads/
 .moonbeard_downloads/
