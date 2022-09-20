@@ -1,0 +1,25 @@
+1.Left-handed Toons
+'https://www.lefthandedtoons.com/'
+All work. Done!
+
+2.Buttersafe
+'https://www.buttersafe.com/' selenium
+Working!
+
+3.Savage Chickens
+'https://www.savagechickens.com'
+
+4.Lunar Baboon
+'http://www.lunarbaboon.com/'
+
+
+5.Extra Ordinary
+'https://www.exocomics.com/'  selenium
+
+6.Wonderella
+'http://nonadventures.com/'
+
+7.Moonbeard
+'https://moonbeard.com/'
+
+
