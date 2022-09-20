@@ -3,8 +3,21 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# PyCarm files
+.idea/
+
+
 # C extensions
 *.so
+
+# Download folders
+..buttersafe_downloads/
+..exocomics_download/
+.left_handed_toons_downlods/
+.lunarbaboon_downloads/
+.moonbeard_downloads/
+.savage_chickens_downloads/
+.wonderella_downloads/
 
 # Distribution / packaging
 .Python

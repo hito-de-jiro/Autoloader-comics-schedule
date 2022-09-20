@@ -17,13 +17,10 @@ while True:
     soup = BeautifulSoup(res.text, 'lxml')
     comic_elems = soup.select('#comic')
     for item in comic_elems:
-        # print(item.find('img').get('src'))
         if comic_elems == []:
             print('Image not found')
         else:
-            # print(comic_elems)
             comic_url = item.find('img').get('src')
-            # print(comic_url)
             res = requests.get(comic_url, headers=HEADERS, cookies=COOKIES)
             res.raise_for_status()
             image_path = os.path.join('buttersafe_downloads', os.path.basename(comic_url))
