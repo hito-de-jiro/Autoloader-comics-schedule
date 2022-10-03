@@ -8,7 +8,7 @@ HOST = 'http://nonadventures.com/'
 os.makedirs('wonderella_downloads', exist_ok=True)
 
 
-def main(url=HOST):
+def ain(url=HOST):
 
     while True:
         #  завантаженя сторінки
