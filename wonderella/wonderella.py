@@ -49,8 +49,7 @@ def save_comic(comic_url):
 
 def prev_link(soup):
     """Get a URL preview link"""
-    nav_elems = soup.select('.nav>a[rel="prev"]')
-    url = nav_elems[0].get('href')
+    url = soup.select('.nav>a[rel="prev"]')[0].get('href')
     return url
 
 
