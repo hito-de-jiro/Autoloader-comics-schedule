@@ -12,44 +12,46 @@ HEADERS = {
 
 os.makedirs('savage_chickens_downloads', exist_ok=True)
 url = 'https://www.savagechickens.com/page/'
-params = ''
 
 
-def main():
+def get_html():
     num_page = 1
     while url:
-        res = requests.get(f'{url}{num_page}', headers=HEADERS, params=params)
-        try:
+        res = requests.get(f'{url}{num_page}', headers=HEADERS)
+
+        res.raise_for_status()
+
+        print('Download page #%s' % num_page)
+        soup = BeautifulSoup(res.text, 'lxml')
+        time.sleep(1)
+        items = soup.select('.entry_content>p>img')
+
+        for item in items:
+            if not item:
+                continue
+            else:
+                image_link = item.get('src')
+
+            res = requests.get(image_link)
             res.raise_for_status()
-        except Exception as exc:
-            print('Something wrong! Error... %s' % exc)
-        finally:
-            print('Download page #%s' % num_page)
-            soup = BeautifulSoup(res.text, 'lxml')
-            time.sleep(1)
-            items = soup.select('.entry_content>p>img')
+            image_file_path = os.path.join('savage_chickens_downloads', os.path.basename(image_link))
 
-            for item in items:
-                if not item:
-                    continue
-                else:
-                    image_link = item.get('src')
-
-                res = requests.get(image_link)
-                res.raise_for_status()
-                image_file_path = os.path.join('savage_chickens_downloads', os.path.basename(image_link))
-
-                if not os.path.isfile(image_file_path):
-                    print('Download image... %s' % image_link)
-                    image_file = open(image_file_path, 'wb')
-                    for chunk in res.iter_content(100_000):
-                        image_file.write(chunk)
-                    image_file.close()
-                else:
-                    print('Image exist!')
+            if not os.path.isfile(image_file_path):
+                print('Download image... %s' % image_link)
+                image_file = open(image_file_path, 'wb')
+                for chunk in res.iter_content(100_000):
+                    image_file.write(chunk)
+                image_file.close()
+            else:
+                print('Image exist!')
+                return
 
             num_page += 1
             time.sleep(1)
+
+
+def main():
+    get_html()
 
 
 if __name__ == '__main__':

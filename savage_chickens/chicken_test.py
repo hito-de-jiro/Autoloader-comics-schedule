@@ -20,7 +20,7 @@ except Exception as exc:
 
 soup = BeautifulSoup(res.text, 'lxml')
 items = soup.select('.entry_content>p>img')
-items_list = []
+
 for item in items:
     if not item:
         continue

@@ -3,14 +3,11 @@ import requests
 
 from bs4 import BeautifulSoup
 
-
-URL = 'https://www.lefthandedtoons.com/'
+URL = 'http://www.lefthandedtoons.com/'
 os.makedirs('left_handed_toons_downlods', exist_ok=True)
 
 
-def main(url=URL):
-
-
+def get_html(url=URL):
     while True:
         #  завантаженя сторінки
         res = requests.get(url)
@@ -18,7 +15,7 @@ def main(url=URL):
 
         soup = BeautifulSoup(res.text, 'lxml')
         comic_elem = soup.select('.comicimage')
-        if comic_elem == []:
+        if not comic_elem:
             print('Image not found')
         else:
             comic_url = comic_elem[0].get('src')
@@ -35,6 +32,7 @@ def main(url=URL):
                 image_file.close()
             else:
                 print('Image exist!')
+                return
 
         try:
             prev_link = soup.select('.prev>a')[0]
@@ -42,6 +40,10 @@ def main(url=URL):
         except IndexError:
             print('Done!')
             break
+
+
+def main():
+    get_html(url=URL)
 
 
 if __name__ == '__main__':
