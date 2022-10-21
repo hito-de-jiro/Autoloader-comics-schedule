@@ -13,10 +13,12 @@ COOKIES = {
               '__utma=170251443.1798268114.1663335330.1663658480.1663662984.10; __utmt=1; '
               '__utmb=170251443.1.10.1663662984; __atuvc=9%7C37%2C20%7C38; __atuvs=63297b88232b3e2b000'
 }
-os.makedirs('comics_folder/buttersafe', exist_ok=True)
 
 
-def get_html(url=HOST):
+path_folder = 'comics_folder/buttersafe'
+
+
+def get_html(comics_folder, url=HOST):
     """"Get html of page for parsing"""
     while True:
         res = requests.get(url, headers=HEADERS, cookies=COOKIES)
@@ -27,7 +29,7 @@ def get_html(url=HOST):
                 print('Image not found')
             else:
                 comic_url = item.find('img').get('src')
-                has_comic = save_comic(comic_url)
+                has_comic = save_comic(comic_url, comics_folder)
                 if not has_comic:
                     return
         try:
@@ -37,11 +39,11 @@ def get_html(url=HOST):
             return
 
 
-def save_comic(comic_url):
+def save_comic(comic_url, comics_folder):
     """Get URL of image and save file in base folder"""
     res = requests.get(comic_url, headers=HEADERS, cookies=COOKIES)
     res.raise_for_status()
-    image_path = os.path.join('comics_folder/buttersafe', os.path.basename(comic_url))
+    image_path = os.path.join(comics_folder, os.path.basename(comic_url))
     # checking file availability
     if not os.path.isfile(image_path):
         print('Download image... %s' % comic_url)
@@ -61,16 +63,18 @@ def prev_link(soup):
     return url
 
 
-def main():
+def main(comics_folder):
     """Start the main process"""
+    print('Buttersafe start')
+    os.makedirs(comics_folder, exist_ok=True)
     try:
         # this a last page
         # url = 'https://www.buttersafe.com/2007/04/03/breakfast-sad-turtle/'
-        get_html()
+        get_html(comics_folder)
     except KeyboardInterrupt:
-        print('Forced program termination!')
+        print('Forced <buttersafe> program termination!')
         return
 
 
 if __name__ == "__main__":
-    main()
+    main(comics_folder=path_folder)

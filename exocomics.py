@@ -66,12 +66,13 @@ def _prev_url(soup):
 
 def main():
     """Start the main process"""
+    print('Exocomic start')
     try:
         # this a last page
         # url = 'https://www.exocomics.com/500/'
         get_html()
     except KeyboardInterrupt:
-        print('Forced program termination!')
+        print('Forced <exocomic> program termination!')
         return
 
 

@@ -55,12 +55,13 @@ def prev_link(soup):
 
 def main():
     """Start the main process"""
+    print('Wonderella start')
     try:
         # this a last page
         # url = 'http://nonadventures.com/2006/09/09/the-torment-of-a-thousand-yesterdays/'
         get_html()
     except KeyboardInterrupt:
-        print('Forced program termination!')
+        print('Forced <wonderella> program termination!')
         return
 
 

@@ -55,12 +55,13 @@ def prev_link(soup):
 
 def main():
     """Start the main process"""
+    print('Left_handed_toons start')
     try:
         # this a last page
         # url = 'https://www.lefthandedtoons.com/1/'
         get_html()
     except KeyboardInterrupt:
-        print('Forced program termination!')
+        print('Forced <left_handed_toons> program termination!')
         return
 
 

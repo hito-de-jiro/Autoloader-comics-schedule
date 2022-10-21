@@ -69,12 +69,13 @@ def get_comics_urls(soup):
 
 def main():
     """Start the main process"""
+    print('Savage_chickens start')
     try:
         # this a last page
         # url = 'https://www.savagechickens.com/page/1182'
         get_html()
     except KeyboardInterrupt:
-        print('Forced program termination!')
+        print('Forced <Savage_chickens> program termination!')
         return
 
 

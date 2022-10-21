@@ -79,12 +79,13 @@ def _save_comic(comic_url, file_name, headers=HEADERS):
 
 def main():
     """Start the main process"""
+    print('Lunarbaboon start')
     try:
         # this a last page
         url = 'http://www.lunarbaboon.com/comics/?currentPage=195'
         get_html(url)
     except KeyboardInterrupt:
-        print('Forced program termination!')
+        print('Forced <Lunarbaboon> program termination!')
         return
 
 
