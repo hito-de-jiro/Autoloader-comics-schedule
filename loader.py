@@ -1,9 +1,11 @@
+#!python3
+import argparse
 import os
 import subprocess
 import sys
 
 
-os.makedirs('base_folder', exist_ok=True)
+os.makedirs('comics_folder', exist_ok=True)
 
 
 def run_parsers():
@@ -20,6 +22,14 @@ def run_parsers():
     for comix_parser in comix_parsers.values():
         subprocess.run([sys.executable, comix_parser])
 
+
+def choice_folder():
+    parser = argparse.ArgumentParser(description='Choice folder for saving comics')
+    parser.add_argument('comic_dir', type=str, help='Output dir for downloading comics')
+    args = parser.parse_args()
+
+    print(args.comic_dir)
+    return args.comic_dir
 
 def check_new_comix() -> list[str]:
     pass

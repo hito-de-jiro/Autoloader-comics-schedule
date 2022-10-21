@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 HOST = 'http://nonadventures.com/'
-os.makedirs('wonderella_downloads', exist_ok=True)
+os.makedirs('comics_folder/wonderella', exist_ok=True)
 
 
 def get_html(url=HOST):
@@ -33,7 +33,7 @@ def save_comic(comic_url):
     """Get URL of image and save file in base folder"""
     res = requests.get(comic_url)
     res.raise_for_status()
-    image_path = os.path.join('wonderella_downloads', os.path.basename(comic_url))
+    image_path = os.path.join('comics_folder/wonderella', os.path.basename(comic_url))
     # checking file availability
     if not os.path.isfile(image_path):
         print('Download image... %s' % comic_url)

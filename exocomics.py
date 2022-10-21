@@ -11,7 +11,7 @@ HEADERS = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                   "(KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
 }
-os.makedirs('exocomics_download', exist_ok=True)
+os.makedirs('comics_folder/exocomics', exist_ok=True)
 
 
 def get_html(url=HOST):
@@ -42,7 +42,7 @@ def _save_comic(comic_url, headers=HEADERS):
     """Get URL of image and save file in base folder"""
     res = requests.get(comic_url, headers)
     res.raise_for_status()
-    image_path = os.path.join('exocomics_download', os.path.basename(comic_url))
+    image_path = os.path.join('comics_folder/exocomics', os.path.basename(comic_url))
     if not os.path.isfile(image_path):  # Перевірка існування файлу.
         print('Download image... %s' % comic_url)
         image_file = open(image_path, 'wb')

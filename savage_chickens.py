@@ -9,7 +9,7 @@ HEADERS = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/104.0.0.0 Safari/537.36',
 }
-os.makedirs('savage_chickens_downloads', exist_ok=True)
+os.makedirs('comics_folder/chickens', exist_ok=True)
 
 
 def get_html(url=HOST):
@@ -40,7 +40,7 @@ def save_comic(comic_url):
     """Get URL of image and save file in base folder"""
     res = requests.get(comic_url)
     res.raise_for_status()
-    image_file_path = os.path.join('savage_chickens_downloads', os.path.basename(comic_url))
+    image_file_path = os.path.join('comics_folder/chickens', os.path.basename(comic_url))
 
     if not os.path.isfile(image_file_path):
         print('Download image... %s' % comic_url)

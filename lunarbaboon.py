@@ -10,7 +10,7 @@ HEADERS = {
 }
 
 HOST = 'http://www.lunarbaboon.com'
-os.makedirs('lunarbaboon_downloads', exist_ok=True)
+os.makedirs('comics_folder/lunarbaboon', exist_ok=True)
 
 
 def get_html(url=HOST):
@@ -63,7 +63,7 @@ def _save_comic(comic_url, file_name, headers=HEADERS):
     """Get URL of image and save file in base folder"""
     res = requests.get(comic_url, headers)
     res.raise_for_status()
-    image_path = os.path.join('lunarbaboon_downloads', file_name)
+    image_path = os.path.join('comics_folder/lunarbaboon', file_name)
     # checking file availability
     if not os.path.isfile(image_path):
         print('Download image... %s' % comic_url)

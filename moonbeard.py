@@ -6,12 +6,14 @@ from bs4 import BeautifulSoup
 
 URL = 'https://moonbeard.com'
 
-os.makedirs('moonbeard_downloads', exist_ok=True)
-
 HEADERS = {
+    'accept': 'text/html,application/xhtml+xml,application/xml;'
+              'q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'sec-ch-ua': '"Chromium";v="106", "Google Chrome";v="106", "Not;A=Brand";v="99"',
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                  'Chrome/105.0.0.0 Safari/537.36'
+                  'Chrome/105.0.0.0 Safari/537.36',
 }
+os.makedirs('comics_folder/moonbeard', exist_ok=True)
 
 
 def get_html(url=URL):
@@ -59,7 +61,7 @@ def _save_comic(comic_url, headers=HEADERS):
     img_link = 'https://moonbeard.com/comics/2022-07-10-MB-2022-07%20Pain.png'
     res = requests.get(comic_url, headers)
     res.raise_for_status()
-    image_path = os.path.join('moonbeard_downloads', os.path.basename(comic_url))
+    image_path = os.path.join('comics_folder/moonbeard', os.path.basename(comic_url))
     if not os.path.isfile(image_path):  # Перевірка існування файлу.
         print('You have a new comics')
         print('Download image... %s' % comic_url)
