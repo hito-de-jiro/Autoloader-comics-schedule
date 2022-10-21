@@ -1,18 +1,23 @@
+import os
 import subprocess
 import sys
 
 
+os.makedirs('base_folder', exist_ok=True)
+
+
 def run_parsers():
-    i = {
-        "buttersafe": "buttersafe.py" # <--comic_name, base_folder
+    comix_parsers = {
+        "buttersafe": "buttersafe.py",   # <--comic_name, base_folder
+        "exocomics": "exocomics.py",
+        "left_handed_toons": "left_handed_toons.py",
+        "lunarbaboon": "lunarbaboon.py",
+        "moonbeard": "moonbeard.py",
+        "savage_chickens": "savage_chickens.py",
+        "wonderella.py": "wonderella.py",
     }
 
-    comix_parsers = [
-        "buttersafe.py",
-        "exocomics.py",
-        "left_handed_toons.py",
-    ]
-    for comix_parser in comix_parsers:
+    for comix_parser in comix_parsers.values():
         subprocess.run([sys.executable, comix_parser])
 
 
