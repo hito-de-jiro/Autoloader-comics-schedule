@@ -15,6 +15,9 @@ target.txt
 # Download folders
 comics_folder/
 
+# Temporary project files
+test.py
+
 # Distribution / packaging
 .Python
 build/

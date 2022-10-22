@@ -1,5 +1,6 @@
 import requests
 import os
+import argparse
 
 from bs4 import BeautifulSoup
 
@@ -13,9 +14,6 @@ COOKIES = {
               '__utma=170251443.1798268114.1663335330.1663658480.1663662984.10; __utmt=1; '
               '__utmb=170251443.1.10.1663662984; __atuvc=9%7C37%2C20%7C38; __atuvs=63297b88232b3e2b000'
 }
-
-
-path_folder = 'comics_folder/buttersafe'
 
 
 def get_html(comics_folder, url=HOST):
@@ -66,6 +64,7 @@ def prev_link(soup):
 def main(comics_folder):
     """Start the main process"""
     print('Buttersafe start')
+    print(f'Comics folder is {comics_folder}')
     os.makedirs(comics_folder, exist_ok=True)
     try:
         # this a last page
@@ -76,5 +75,22 @@ def main(comics_folder):
         return
 
 
+def choice_folder() -> str:
+    """Choice output comics folder"""
+
+    parser = argparse.ArgumentParser(prog='loader', description='loader comics shit')
+    parser.add_argument('--outdir', type=str, default=None, help='Output absolut path')
+    args = parser.parse_args()
+
+    default_path = 'comics_folder/buttersafe'
+    outdir = args.outdir
+    if outdir is None:
+        return default_path
+    elif os.path.isabs(outdir):
+        return outdir
+    else:
+        raise ValueError('Path is not absolute')
+
+
 if __name__ == "__main__":
-    main(comics_folder=path_folder)
+    main(comics_folder=choice_folder())

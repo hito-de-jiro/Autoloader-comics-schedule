@@ -15,15 +15,15 @@ def run_parsers():
     comix_parsers = {
         "buttersafe": "buttersafe.py",  # <--comic_name, base_folder
         # "exocomics": "exocomics.py",
-        # "left_handed_toons": "left_handed_toons.py",
+        # "left_handed": "left_handed.py",
         # "lunarbaboon": "lunarbaboon.py",
-        # "savage_chickens": "savage_chickens.py",
+        # "savage_chickens": "chickens.py",
         # "wonderella.py": "wonderella.py",
         # "moonbeard": "moonbeard.py",  # <-- not worked
     }
 
     for comix_parser in comix_parsers.values():
-        subprocess.run([sys.executable, comix_parser, comics_path])
+        subprocess.run([sys.executable, comix_parser])
     print(comics_path)
 
 
@@ -67,7 +67,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-# E:\\GitHub\\Autoloader-comics-schedule\\comics_folder_2

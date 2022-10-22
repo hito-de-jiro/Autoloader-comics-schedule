@@ -1,3 +1,4 @@
+import argparse
 import os
 import requests
 
@@ -7,7 +8,7 @@ HOST = 'http://www.lefthandedtoons.com/'
 os.makedirs('comics_folder/left_handed', exist_ok=True)
 
 
-def get_html(url=HOST):
+def get_html(comics_folder, url=HOST):
     while True:
         #  завантаженя сторінки
         res = requests.get(url)
@@ -19,7 +20,7 @@ def get_html(url=HOST):
             print('Image not found')
         else:
             comic_url = comic_elem[0].get('src')
-            has_comic = save_comic(comic_url)
+            has_comic = save_comic(comic_url, comics_folder)
             if not has_comic:
                 return
         try:
@@ -29,11 +30,11 @@ def get_html(url=HOST):
             break
 
 
-def save_comic(comic_url):
+def save_comic(comic_url, comics_folder):
     """Get URL of image and save file in base folder"""
     res = requests.get(comic_url)
     res.raise_for_status()
-    image_path = os.path.join('comics_folder/left_handed', os.path.basename(comic_url))
+    image_path = os.path.join(comics_folder, os.path.basename(comic_url))
     # checking file availability
     if not os.path.isfile(image_path):
         print('Download image... %s' % comic_url)
@@ -53,17 +54,36 @@ def prev_link(soup):
     return url
 
 
-def main():
+def main(comics_folder):
     """Start the main process"""
-    print('Left_handed_toons start')
+    print('Left_handed start')
+    print(f'Comics folder is {comics_folder}')
+    os.makedirs(comics_folder, exist_ok=True)
     try:
         # this a last page
         # url = 'https://www.lefthandedtoons.com/1/'
-        get_html()
+        get_html(comics_folder)
     except KeyboardInterrupt:
         print('Forced <left_handed_toons> program termination!')
         return
 
 
+def choice_folder() -> str:
+    """Choice output comics folder"""
+
+    parser = argparse.ArgumentParser(prog='loader', description='loader comics shit')
+    parser.add_argument('--outdir', type=str, default=None, help='Output absolut path')
+    args = parser.parse_args()
+
+    default_path = 'comics_folder/left_handed'
+    outdir = args.outdir
+    if outdir is None:
+        return default_path
+    elif os.path.isabs(outdir):
+        return outdir
+    else:
+        raise ValueError('Path is not absolute')
+
+
 if __name__ == '__main__':
-    main()
+    main(comics_folder=choice_folder())

@@ -1,5 +1,6 @@
 import os
 import requests
+import argparse
 
 from bs4 import BeautifulSoup
 
@@ -14,7 +15,7 @@ HEADERS = {
 os.makedirs('comics_folder/exocomics', exist_ok=True)
 
 
-def get_html(url=HOST):
+def get_html(comics_folder, url=HOST):
     """"Get html of page for parsing"""
     sess = requests.Session()
     while True:
@@ -24,7 +25,7 @@ def get_html(url=HOST):
         try:
             item = soup.find('img', class_='image-style-main-comic').get('src')
             comic_url = HOST + item
-            has_new_comic = _save_comic(comic_url, headers=HEADERS)
+            has_new_comic = save_comic(comics_folder, comic_url, headers=HEADERS)
             if not has_new_comic:
                 return
         except AttributeError:
@@ -38,11 +39,11 @@ def get_html(url=HOST):
             return
 
 
-def _save_comic(comic_url, headers=HEADERS):
+def save_comic(comics_folder, comic_url, headers=HEADERS):
     """Get URL of image and save file in base folder"""
     res = requests.get(comic_url, headers)
     res.raise_for_status()
-    image_path = os.path.join('comics_folder/exocomics', os.path.basename(comic_url))
+    image_path = os.path.join(comics_folder, os.path.basename(comic_url))
     if not os.path.isfile(image_path):  # Перевірка існування файлу.
         print('Download image... %s' % comic_url)
         image_file = open(image_path, 'wb')
@@ -64,17 +65,36 @@ def _prev_url(soup):
     return prev_link
 
 
-def main():
+def main(comics_folder):
     """Start the main process"""
     print('Exocomic start')
+    print(f'Comics folder is {comics_folder}')
+    os.makedirs(comics_folder, exist_ok=True)
     try:
         # this a last page
         # url = 'https://www.exocomics.com/500/'
-        get_html()
+        get_html(comics_folder)
     except KeyboardInterrupt:
         print('Forced <exocomic> program termination!')
         return
 
 
+def choice_folder() -> str:
+    """Choice output comics folder"""
+
+    parser = argparse.ArgumentParser(prog='loader', description='loader comics shit')
+    parser.add_argument('--outdir', type=str, default=None, help='Output absolut path')
+    args = parser.parse_args()
+
+    default_path = 'comics_folder/exocomics'
+    outdir = args.outdir
+    if outdir is None:
+        return default_path
+    elif os.path.isabs(outdir):
+        return outdir
+    else:
+        raise ValueError('Path is not absolute')
+
+
 if __name__ == "__main__":
-    main()
+    main(comics_folder=choice_folder())

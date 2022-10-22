@@ -1,3 +1,4 @@
+import argparse
 import os
 import requests
 
@@ -13,7 +14,7 @@ HOST = 'http://www.lunarbaboon.com'
 os.makedirs('comics_folder/lunarbaboon', exist_ok=True)
 
 
-def get_html(url=HOST):
+def get_html(comics_folder, url=HOST):
     """"Get html of page for parsing"""
     sess = requests.Session()
 
@@ -25,7 +26,7 @@ def get_html(url=HOST):
         # print(comics_urls)
         for comic_url in comics_urls:
             file_name = os.path.basename(comic_url).split('?')[0]
-            has_comic = _save_comic(comic_url, file_name)
+            has_comic = save_comic(comic_url, comics_folder, file_name)
             if not has_comic:
                 return
         try:
@@ -59,11 +60,11 @@ def get_next_page(soup):
     return url
 
 
-def _save_comic(comic_url, file_name, headers=HEADERS):
+def save_comic(comic_url, comics_folder, file_name, headers=HEADERS):
     """Get URL of image and save file in base folder"""
     res = requests.get(comic_url, headers)
     res.raise_for_status()
-    image_path = os.path.join('comics_folder/lunarbaboon', file_name)
+    image_path = os.path.join(comics_folder, file_name)
     # checking file availability
     if not os.path.isfile(image_path):
         print('Download image... %s' % comic_url)
@@ -77,17 +78,36 @@ def _save_comic(comic_url, file_name, headers=HEADERS):
         return False
 
 
-def main():
+def main(comics_folder):
     """Start the main process"""
     print('Lunarbaboon start')
+    print(f'Comics folder is {comics_folder}')
+    os.makedirs(comics_folder, exist_ok=True)
     try:
         # this a last page
-        url = 'http://www.lunarbaboon.com/comics/?currentPage=195'
-        get_html(url)
+        # url = 'http://www.lunarbaboon.com/comics/?currentPage=195'
+        get_html(comics_folder)
     except KeyboardInterrupt:
         print('Forced <Lunarbaboon> program termination!')
         return
 
 
+def choice_folder() -> str:
+    """Choice output comics folder"""
+
+    parser = argparse.ArgumentParser(prog='loader', description='loader comics shit')
+    parser.add_argument('--outdir', type=str, default=None, help='Output absolut path')
+    args = parser.parse_args()
+
+    default_path = 'comics_folder/lunarbaboon'
+    outdir = args.outdir
+    if outdir is None:
+        return default_path
+    elif os.path.isabs(outdir):
+        return outdir
+    else:
+        raise ValueError('Path is not absolute')
+
+
 if __name__ == '__main__':
-    main()
+    main(comics_folder=choice_folder())
