@@ -26,6 +26,7 @@ def get_html(comics_folder, url=HOST):
             if not comic_elems:
                 print('Image not found')
             else:
+                print(comic_date(soup))  # return comic date
                 comic_url = item.find('img').get('src')
                 has_comic = save_comic(comic_url, comics_folder)
                 if not has_comic:
@@ -59,6 +60,12 @@ def prev_link(soup):
     """Get a URL preview link"""
     url = soup.select('#headernav>a[rel="prev"]')[0].get('href')
     return url
+
+
+def comic_date(soup):
+    """Get the publication date of the comic"""
+    date_comic = soup.select('#headernav-date')[0].getText()
+    return date_comic.strip()
 
 
 def main(comics_folder):

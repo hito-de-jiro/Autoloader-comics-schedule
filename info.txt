@@ -2,31 +2,29 @@
 2. Автоматично завантажувати зображення у
 разі оновлення з останньої сесії
 3. Планувалбник може запускати її раз в день
-4. Програма завантажує комікс, новий копіює на робочий стіл
+4. Програма завантажує комікс
 
 
-1.Left-handed Toons
-'https://www.lefthandedtoons.com/'
-All work. Done!
 
-2.Buttersafe
+1.Buttersafe
 'https://www.buttersafe.com/'
-Working!
 
-3.Savage Chickens
+2.Chickens
 'https://www.savagechickens.com'
+
+3.Exocomics
+'https://www.exocomics.com/'
+
+1.Left_handed
+'https://www.lefthandedtoons.com/'
 
 4.Lunar Baboon
 'http://www.lunarbaboon.com/'
-
-
-5.Exocomics
-'https://www.exocomics.com/'
 
 6.Wonderella
 'http://nonadventures.com/'
 
 7.Moonbeard
-'https://moonbeard.com/'
+'https://moonbeard.com/' --- not worked
 
 
