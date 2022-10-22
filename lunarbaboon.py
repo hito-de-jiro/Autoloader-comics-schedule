@@ -67,7 +67,7 @@ def save_comic(comic_url, comics_folder, file_name, headers=HEADERS):
     image_path = os.path.join(comics_folder, file_name)
     # checking file availability
     if not os.path.isfile(image_path):
-        print('Download image... %s' % comic_url)
+        print('Download image... %s' % comic_url.split('?')[0])
         image_file = open(image_path, 'wb')
         for chunk in res.iter_content(100_000):
             image_file.write(chunk)

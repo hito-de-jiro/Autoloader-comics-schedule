@@ -4,8 +4,6 @@ import os
 import subprocess
 import sys
 
-from pathlib import Path
-
 
 def run_parsers():
     """Run main loop of program"""
@@ -14,31 +12,34 @@ def run_parsers():
 
     comix_parsers = {
         "buttersafe": "buttersafe.py",  # <--comic_name, base_folder
-        # "exocomics": "exocomics.py",
-        # "left_handed": "left_handed.py",
-        # "lunarbaboon": "lunarbaboon.py",
-        # "savage_chickens": "chickens.py",
-        # "wonderella.py": "wonderella.py",
+        "exocomics": "exocomics.py",
+        "left_handed": "left_handed.py",
+        "lunarbaboon": "lunarbaboon.py",
+        "savage_chickens": "chickens.py",
+        "wonderella": "wonderella.py",
         # "moonbeard": "moonbeard.py",  # <-- not worked
     }
 
-    for comix_parser in comix_parsers.values():
-        subprocess.run([sys.executable, comix_parser])
-    print(comics_path)
+    for name, comix_parser in comix_parsers.items():
+        path = f"{comics_path}\\{name}"
+        subprocess.run([sys.executable, comix_parser, '--outdir', path])
 
 
 def choice_folder() -> str:
     """Change the default download folder"""
-    folder = 'comics_folder'
-    parser = argparse.ArgumentParser(prog='loader', description='loader comics shit')
-    parser.add_argument('outdir', type=str, nargs='?', default=folder, help='Output absolut path')
+
+    parser = argparse.ArgumentParser(prog='loader', description='loader comics')
+    parser.add_argument('--outdir', type=str, default=None, help='Output absolut path')
     args = parser.parse_args()
 
-    if Path(args.outdir).is_absolute():
-        new_folder = args.outdir
-        return new_folder
+    default_path = r'E:\GitHub\Autoloader-comics-schedule\comics_folder'
+    outdir = args.outdir
+    if outdir is None:
+        return default_path
+    elif os.path.isabs(outdir):
+        return outdir
     else:
-        return folder
+        raise ValueError('Path is not absolute')
 
 
 def check_new_comix() -> list[str]:
