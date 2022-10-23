@@ -1,6 +1,7 @@
+import datetime
+import argparse
 import requests
 import os
-import argparse
 
 from bs4 import BeautifulSoup
 
@@ -26,7 +27,8 @@ def get_html(comics_folder, url=HOST):
             if not comic_elems:
                 print('Image not found')
             else:
-                print(comic_date(soup))  # return comic date
+                # print(comic_date(soup))  # return comic date
+                # comic_name = comic_date(soup)
                 comic_url = item.find('img').get('src')
                 has_comic = save_comic(comic_url, comics_folder)
                 if not has_comic:
@@ -65,7 +67,10 @@ def prev_link(soup):
 def comic_date(soup):
     """Get the publication date of the comic"""
     date_comic = soup.select('#headernav-date')[0].getText()
-    return date_comic.strip()
+    date_in = date_comic.strip()
+    date_out = datetime.datetime.strptime(date_in, '%A, %B %dth, %Y')
+    date_out = str(date_out.date())
+    return date_out
 
 
 def main(comics_folder):
