@@ -42,11 +42,6 @@ def run_parsers():
     notify_user(new_comics)
 
 
-def create_log():
-    # TODO: создать журнал загрузки комиксов. Джон файл- название комикса: дата последнего комикса
-    pass
-
-
 def choice_folder() -> str:
     """Change the default download folder"""
     parser = argparse.ArgumentParser(prog='loader', description='loader comics')
@@ -62,9 +57,8 @@ def choice_folder() -> str:
         raise ValueError('Path is not absolute')
 
 
-def check_new_comics(path_folder: str) -> list[str]:
-    """Check new comics and return list of new comics"""
-
+def all_files_date(path_folder: str) -> dict:
+    """Get create date all files"""
     all_files = {}
     for folder_name, _, filenames in os.walk(path_folder):
         for filename in filenames:
@@ -72,12 +66,21 @@ def check_new_comics(path_folder: str) -> list[str]:
             file_cdate = datetime.datetime.fromtimestamp(getctime(file_path))
             all_files[file_path] = file_cdate
 
+    return all_files
+
+
+def check_new_comics(path_folder: str) -> list[str]:
+    """Check new comics and return list of new comics"""
+    all_files = all_files_date(path_folder)
+
     new_files = {}
     for file_path, file_cdate in all_files.items():
         if file_cdate >= START_TIME:
             new_files[file_path] = file_cdate
 
     return list(new_files.keys())
+
+
 
 
 def notify_user(new_comics: list[str]):

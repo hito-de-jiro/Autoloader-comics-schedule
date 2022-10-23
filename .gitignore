@@ -17,6 +17,7 @@ comics_folder/
 
 # Temporary project files
 test.py
+info_comics.json
 
 # Distribution / packaging
 .Python
