@@ -41,6 +41,9 @@ def run_parsers():
     # Notify user about new comics
     notify_user(new_comics)
 
+    # Create logs comics downloads
+    # create_log(JSON_PATH)
+
 
 def choice_folder() -> str:
     """Change the default download folder"""
