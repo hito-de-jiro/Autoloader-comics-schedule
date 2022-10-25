@@ -84,8 +84,6 @@ def check_new_comics(path_folder: str) -> list[str]:
     return list(new_files.keys())
 
 
-
-
 def notify_user(new_comics: list[str]):
     """Add file with details of new comix in user desktop"""
     new_comics_info = '\n'.join(new_comics)

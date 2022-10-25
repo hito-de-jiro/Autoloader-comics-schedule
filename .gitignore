@@ -16,9 +16,8 @@ target.txt
 comics_folder/
 
 # Temporary project files
-test.py
 info_comics.json
-
+test*
 # Distribution / packaging
 .Python
 build/
