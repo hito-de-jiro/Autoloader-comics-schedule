@@ -49,7 +49,7 @@ def save_comic(comic_url, comics_folder, comic_date, headers=HEADERS):
     """Get URL of image and save file in base folder"""
     res = requests.get(comic_url, headers)
     res.raise_for_status()
-    comic_name = comic_date.strftime("%Y-%m-%d") + '_' + os.path.basename(comic_url)
+    comic_name = comic_date.strftime("%Y-%m-%d") + '__' + os.path.basename(comic_url)
     image_path = os.path.join(comics_folder, comic_name)
     if not os.path.isfile(image_path):  # Перевірка існування файлу.
         print('Download image... %s' % comic_url)
@@ -76,6 +76,10 @@ def main(comics_folder, date_limit):
     """Start the main process"""
     print('Exocomic start')
     print(f'Comics folder is {comics_folder}')
+
+    if date_limit:
+        print(f'Date limit is {date_limit}')
+
     os.makedirs(comics_folder, exist_ok=True)
     try:
         # this a last page
@@ -84,6 +88,7 @@ def main(comics_folder, date_limit):
     except KeyboardInterrupt:
         print('Forced <exocomic> program termination!')
         return
+
 
 def valid_date(s):
     """Datetime validator"""

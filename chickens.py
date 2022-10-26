@@ -16,7 +16,8 @@ DEFAULT_PATH = 'comics_folder/chickens'
 
 def get_html(comics_folder, date_limit: datetime, url=HOST):
     while True:
-        res = requests.get(url, headers=HEADERS)
+        sess = requests.Session()
+        res = sess.get(url, headers=HEADERS)
         res.raise_for_status()
         soup = BeautifulSoup(res.text, 'lxml')
         if date_limit:
@@ -26,7 +27,6 @@ def get_html(comics_folder, date_limit: datetime, url=HOST):
         for comic_date, comic_url in comics_dict.items():
 
             comic_date = parse_date(comic_date, ignoretz=True)
-            print(comic_date)
             if date_limit and comic_date < date_limit:
                 print(f'Done. Got date limit')
                 return
@@ -47,9 +47,10 @@ def get_next_page(soup):
 
 def save_comic(comic_url, comics_folder, comic_date):
     """Get URL of image and save file in base folder"""
-    res = requests.get(comic_url)
+    sess = requests.Session()
+    res = sess.get(comic_url)
     res.raise_for_status()
-    comic_name = comic_date.strftime("%Y-%m-%d") + '_' + os.path.basename(comic_url)
+    comic_name = comic_date.strftime("%Y-%m-%d") + '__' + os.path.basename(comic_url)
     image_file_path = os.path.join(comics_folder, comic_name)
 
     if not os.path.isfile(image_file_path):

@@ -1,34 +1,43 @@
 import argparse
+import datetime
 import os
 import requests
 
 from bs4 import BeautifulSoup
-
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                  'AppleWebKit/537.36 (KHTML, like Gecko) '
-                  'Chrome/105.0.0.0 Safari/537.36',
-}
+from dateutil.parser import parse as parse_date
 
 HOST = 'http://www.lunarbaboon.com'
-os.makedirs('comics_folder/lunarbaboon', exist_ok=True)
+HEADERS = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,'
+              'application/signed-exchange;v=b3;q=0.9',
+    'Accept-Encoding': 'gzip, deflate',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                  'Chrome/106.0.0.0 Safari/537.36',
+}
+COOKIES = {
+    'Cookie': 'JSESSIONID=4671D41BC6A297E8F70576727EA7D0F9.v5-web010; '
+              'ss_cid=f051e213-4199-4184-b464-9b958402c8b3; ss_cpvisit=1663317626270; '
+              'ss_cid=f051e213-4199-4184-b464-9b958402c8b3; ss_cpvisit=1666782210676'
+}
+DEFAULT_PATH = 'comics_folder/lunarbaboon'
 
 
-def get_html(comics_folder, url=HOST):
+def get_html(comics_folder, date_limit: datetime, url=HOST):
     """"Get html of page for parsing"""
     sess = requests.Session()
 
     while True:
-        res = sess.get(url, headers=HEADERS)
+        res = sess.get(url, headers=HEADERS, cookies=COOKIES)
         res.raise_for_status()
         soup = BeautifulSoup(res.text, 'lxml')
-        comics_urls = get_comics_urls(soup)
+        comics_dict = get_content(soup)
         # print(comics_urls)
-        for comic_url in comics_urls:
-            file_name = os.path.basename(comic_url).split('?')[0]
-            has_comic = save_comic(comic_url, comics_folder, file_name)
-            if not has_comic:
+        for comic_date, comic_url in comics_dict.items():
+            if date_limit and comic_date < date_limit:
+                print(f'Done. Got date limit')
                 return
+            save_comic(comic_url, comics_folder, comic_date)
+
         try:
             url = get_next_page(soup)
         except IndexError:
@@ -36,22 +45,29 @@ def get_html(comics_folder, url=HOST):
             return
 
 
-def get_comics_urls(soup):
-    """Get all URLs from page"""
-    comics_urls = []
-    items = soup.select('.body')
-    for item in items:
-        if not item:
-            continue
+def get_content(soup) -> dict:
+    """Return dict: k - date, v - url"""
+    comic_urls = []
+    comic_dates = []
+    comic_images_elem = soup.select('.body>p>span>img')
+    comic_dates_elem = soup.select('.posted-on')
+    for image in comic_images_elem:
+        image_link = image.get('src')
+        if image_link.startswith('http://'):
+            comic_url = image_link
         else:
-            image_link = item.find_all('img')[0].get('src')
-            if image_link.startswith('http://'):
-                comic_url = image_link
-            else:
-                comic_url = HOST + image_link
-            comics_urls.append(comic_url)
+            comic_url = HOST + image_link
+        comic_urls.append(comic_url)
 
-    return comics_urls
+    for date in comic_dates_elem:
+        comic_date = date.getText()
+        comic_date = parse_date(comic_date)
+
+        comic_dates.append(comic_date)
+
+    find_elems = dict(zip(comic_dates, comic_urls))
+
+    return find_elems
 
 
 def get_next_page(soup):
@@ -60,10 +76,13 @@ def get_next_page(soup):
     return url
 
 
-def save_comic(comic_url, comics_folder, file_name, headers=HEADERS):
+def save_comic(comic_url, comics_folder, comic_date):
     """Get URL of image and save file in base folder"""
-    res = requests.get(comic_url, headers)
+    comic_link = comic_url.split('?')[0]
+    sess = requests.Session()
+    res = sess.get(comic_link, headers=HEADERS, cookies=COOKIES)
     res.raise_for_status()
+    file_name = comic_date.strftime("%Y-%m-%d") + '__' + os.path.basename(comic_url).split('?')[0]
     image_path = os.path.join(comics_folder, file_name)
     # checking file availability
     if not os.path.isfile(image_path):
@@ -74,11 +93,11 @@ def save_comic(comic_url, comics_folder, file_name, headers=HEADERS):
         image_file.close()
         return True
     else:
-        print('No new comics!')
+        print(f'Date: {comic_date.strftime("%Y-%m-%d")} -- No new comics!')
         return False
 
 
-def main(comics_folder):
+def main(comics_folder, date_limit):
     """Start the main process"""
     print('Lunarbaboon start')
     print(f'Comics folder is {comics_folder}')
@@ -86,28 +105,39 @@ def main(comics_folder):
     try:
         # this a last page
         # url = 'http://www.lunarbaboon.com/comics/?currentPage=195'
-        get_html(comics_folder)
+        get_html(comics_folder, date_limit)
     except KeyboardInterrupt:
         print('Forced <Lunarbaboon> program termination!')
         return
 
 
-def choice_folder() -> str:
+def valid_date(s):
+    """Datetime validator"""
+    try:
+        return datetime.datetime.strptime(s, '%Y-%m-%d')
+    except ValueError:
+        msg = "not a valid date: {0!r}".format(s)
+        raise argparse.ArgumentTypeError(msg)
+
+
+def parse_params():
     """Choice output comics folder"""
 
     parser = argparse.ArgumentParser(prog='loader', description='loader comics shit')
     parser.add_argument('--outdir', type=str, default=None, help='Output absolut path')
+    parser.add_argument('--date_limit', type=valid_date,
+                        default=None, help="The Date - format YYYY-MM-DD")
+
     args = parser.parse_args()
 
-    default_path = 'comics_folder/lunarbaboon'
-    outdir = args.outdir
-    if outdir is None:
-        return default_path
-    elif os.path.isabs(outdir):
-        return outdir
-    else:
+    if args.outdir is None:
+        args.outdir = DEFAULT_PATH
+    elif not os.path.isabs(args.outdir):
         raise ValueError('Path is not absolute')
+
+    return args
 
 
 if __name__ == '__main__':
-    main(comics_folder=choice_folder())
+    params = parse_params()
+    main(comics_folder=params.outdir, date_limit=params.date_limit)

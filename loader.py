@@ -9,12 +9,13 @@ from os.path import getctime
 
 DESKTOP_PATH = r'E:\Domix\Desktop'
 NEW_COMICS_INFO_PATH = os.path.join(DESKTOP_PATH, 'new_comics_info.txt')
+DEFAULT_PATH = r'E:\GitHub\Autoloader-comics-schedule\comics_folder'
 START_TIME = datetime.datetime.now()
 
 
 def run_parsers():
     """Run main loop of program"""
-    comics_path = choice_folder()
+    comics_path = parse_params()
     os.makedirs(comics_path, exist_ok=True)
 
     comix_parsers = {
@@ -45,7 +46,7 @@ def run_parsers():
     # create_log(JSON_PATH)
 
 
-def choice_folder() -> str:
+def parse_params() -> str:
     """Change the default download folder"""
     parser = argparse.ArgumentParser(prog='loader', description='loader comics')
     parser.add_argument('--outdir', type=str,

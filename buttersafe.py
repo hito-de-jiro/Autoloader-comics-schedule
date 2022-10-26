@@ -22,7 +22,8 @@ DEFAULT_PATH = 'comics_folder/buttersafe'
 def get_html(comics_folder, date_limit: datetime, url=HOST):
     """"Get html of page for parsing"""
     while True:
-        res = requests.get(url, headers=HEADERS, cookies=COOKIES)
+        sess = requests.Session()
+        res = sess.get(url, headers=HEADERS, cookies=COOKIES)
         soup = BeautifulSoup(res.text, 'lxml')
 
         comic_elems = soup.select('#comic')
@@ -46,12 +47,13 @@ def get_html(comics_folder, date_limit: datetime, url=HOST):
             return
 
 
-def save_comic(comic_url, comics_folder, comic_date) -> bool:
+def save_comic(comic_url, comics_folder, comic_date: datetime) -> bool:
     """Get URL of image and save file in base folder"""
-    res = requests.get(comic_url, headers=HEADERS, cookies=COOKIES)
+    sess = requests.Session()
+    res = sess.get(comic_url, headers=HEADERS, cookies=COOKIES)
     res.raise_for_status()
-
-    image_path = os.path.join(comics_folder, os.path.basename(comic_url))
+    comic_name = comic_date.strftime("%Y-%m-%d") + '__' + os.path.basename(comic_url)
+    image_path = os.path.join(comics_folder, comic_name)
 
     # checking file availability
     if not os.path.isfile(image_path):
