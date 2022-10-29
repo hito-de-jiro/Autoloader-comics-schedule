@@ -12,6 +12,8 @@ HEADERS = {
                   'Chrome/104.0.0.0 Safari/537.36',
 }
 DEFAULT_PATH = 'comics_folder/chickens'
+START_TIME = datetime.datetime.now()
+DEFAULT_DATE = (START_TIME - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
 
 
 def get_html(comics_folder, date_limit: datetime, url=HOST):
@@ -21,7 +23,7 @@ def get_html(comics_folder, date_limit: datetime, url=HOST):
         res.raise_for_status()
         soup = BeautifulSoup(res.text, 'lxml')
         if date_limit:
-            print(f'Date limit is {date_limit}')
+            print(f'Date limit is {date_limit.strftime("%Y-%m-%d")}')
 
         comics_dict = get_content(soup)
         for comic_date, comic_url in comics_dict.items():
@@ -87,12 +89,15 @@ def get_content(soup) -> dict:
     for item in items:
         images = item.select('div[id]')
         elems = item.select('span[title]')
-        for image in images:
-            comic_url = (image.find('img').get('src'))
-            comic_urls.append(comic_url)
-        for elem in elems:
-            comic_date = elem.get('title')
-            comic_dates.append(comic_date)
+        try:
+            for image in images:
+                comic_url = (image.find('img').get('src'))
+                comic_urls.append(comic_url)
+            for elem in elems:
+                comic_date = elem.get('title')
+                comic_dates.append(comic_date)
+        except AttributeError:
+            continue
     find_elems = dict(zip(comic_dates, comic_urls))
 
     return find_elems
@@ -134,9 +139,14 @@ def parse_params():
     elif not os.path.isabs(args.outdir):
         raise ValueError('Path is not absolute')
 
+    if args.date_limit is None:
+        args.date_limit = parse_date(DEFAULT_DATE)
+
     return args
 
 
 if __name__ == '__main__':
     params = parse_params()
     main(comics_folder=params.outdir, date_limit=params.date_limit)
+
+

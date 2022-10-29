@@ -20,6 +20,8 @@ COOKIES = {
               'ss_cid=f051e213-4199-4184-b464-9b958402c8b3; ss_cpvisit=1666782210676'
 }
 DEFAULT_PATH = 'comics_folder/lunarbaboon'
+START_TIME = datetime.datetime.now()
+DEFAULT_DATE = (START_TIME - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
 
 
 def get_html(comics_folder, date_limit: datetime, url=HOST):
@@ -47,9 +49,13 @@ def get_html(comics_folder, date_limit: datetime, url=HOST):
 
 def get_content(soup) -> dict:
     """Return dict: k - date, v - url"""
+    global comic_images_elem
     comic_urls = []
     comic_dates = []
-    comic_images_elem = soup.select('.body>p>span>img')
+    if soup.select('.body>p>span>span>img'):
+        comic_images_elem = soup.select('.body>p>span>span>img')
+    elif soup.select('.body>p>span>img'):
+        comic_images_elem = soup.select('.body>p>span>img')
     comic_dates_elem = soup.select('.posted-on')
     for image in comic_images_elem:
         image_link = image.get('src')
@@ -135,9 +141,15 @@ def parse_params():
     elif not os.path.isabs(args.outdir):
         raise ValueError('Path is not absolute')
 
+    if args.date_limit is None:
+        args.date_limit = parse_date(DEFAULT_DATE)
+
     return args
 
 
 if __name__ == '__main__':
     params = parse_params()
     main(comics_folder=params.outdir, date_limit=params.date_limit)
+
+
+# TODO: 2012 year ('.body>p>span>img') and ('.body>p>span>span>img')

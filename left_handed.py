@@ -8,6 +8,9 @@ from dateutil.parser import parse as parse_date
 
 HOST = 'http://www.lefthandedtoons.com/'
 DEFAULT_PATH = 'comics_folder/left_handed'
+START_TIME = datetime.datetime.now()
+#  DEFAULT_DATE = (START_TIME - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
+DEFAULT_DATE = '2018-01-01'
 
 
 def get_html(comics_folder, date_limit, url=HOST):
@@ -80,7 +83,7 @@ def main(comics_folder, date_limit):
     print(f'Comics folder is {comics_folder}')
 
     if date_limit:
-        print(f'Date limit is {date_limit}')
+        print(f'Date limit is {date_limit.strftime("%Y-%m-%d")}')
 
     os.makedirs(comics_folder, exist_ok=True)
     try:
@@ -115,11 +118,12 @@ def parse_params():
     elif not os.path.isabs(args.outdir):
         raise ValueError('Path is not absolute')
 
+    if args.date_limit is None:
+        args.date_limit = parse_date(DEFAULT_DATE)
+
     return args
 
 
 if __name__ == '__main__':
     params = parse_params()
     main(comics_folder=params.outdir, date_limit=params.date_limit)
-
-# TODO: проверить работоспособность

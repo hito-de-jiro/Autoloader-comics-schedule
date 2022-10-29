@@ -3,12 +3,13 @@ import argparse
 import os
 import requests
 
-from pprint import pprint
 from bs4 import BeautifulSoup
 from dateutil.parser import parse as parse_date
 
 HOST = 'http://nonadventures.com/'
 DEFAULT_PATH = 'comics_folder/wonderella'
+START_TIME = datetime.datetime.now()
+DEFAULT_DATE = (START_TIME - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
 
 
 def get_html(comics_folder, date_limit: datetime, url=HOST):
@@ -23,7 +24,7 @@ def get_html(comics_folder, date_limit: datetime, url=HOST):
         for comic_date, comic_url in comics_dict.items():
 
             if date_limit and comic_date < date_limit:
-                print(f'Done. Got date limit')
+                print(f'Done. Got date limit.')
                 return
             save_comic(comic_url, comics_folder, comic_date)
 
@@ -66,6 +67,7 @@ def save_comic(comic_url, comics_folder, comic_date) -> bool:
 def prev_link(soup):
     """Get a URL preview link"""
     url = soup.select('.nav>a[rel="prev"]')[0].get('href')
+
     return url
 
 
@@ -81,21 +83,20 @@ def get_comic_date(soup) -> datetime:
 def get_comic_url(soup):
     """Get the link for download of the comic"""
     link = soup.select('#comic>img')[0].get('src')
+
     return link
 
 
 def main(comics_folder, date_limit):
     """Start the main process"""
-    print('Wonderella start')
+    print('<Wonderella> start!')
     print(f'Comics folder is {comics_folder}')
 
     if date_limit:
-        print(f'Date limit is {date_limit}')
+        print(f'Date limit is {date_limit.strftime("%Y-%m-%d")}')
 
     os.makedirs(comics_folder, exist_ok=True)
     try:
-        # this a last page
-        # url = 'http://nonadventures.com/2006/09/09/the-torment-of-a-thousand-yesterdays/'
         get_html(comics_folder, date_limit)
     except KeyboardInterrupt:
         print('Forced <wonderella> program termination!')
@@ -113,7 +114,6 @@ def valid_date(s):
 
 def parse_params():
     """Choice output comics folder"""
-
     parser = argparse.ArgumentParser(prog='loader', description='loader comics shit')
     parser.add_argument('--outdir', type=str, default=None, help='Output absolut path')
     parser.add_argument('--date_limit', type=valid_date,
@@ -124,6 +124,9 @@ def parse_params():
         args.outdir = DEFAULT_PATH
     elif not os.path.isabs(args.outdir):
         raise ValueError('Path is not absolute')
+
+    if args.date_limit is None:
+        args.date_limit = parse_date(DEFAULT_DATE)
 
     return args
 

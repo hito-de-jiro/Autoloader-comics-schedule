@@ -15,6 +15,8 @@ HEADERS = {
                   "(KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
 }
 DEFAULT_PATH = 'comics_folder/exocomics'
+START_TIME = datetime.datetime.now()
+DEFAULT_DATE = (START_TIME - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
 
 
 def get_html(comics_folder, date_limit, url=HOST):
@@ -35,7 +37,10 @@ def get_html(comics_folder, date_limit, url=HOST):
             if date_limit and comic_date < date_limit:
                 print(f'Done. Got date limit')
                 return
+
             save_comic(comic_url, comics_folder, comic_date)
+        except AttributeError:
+            continue
 
         finally:
             prev_link = _prev_url(soup)
@@ -78,7 +83,7 @@ def main(comics_folder, date_limit):
     print(f'Comics folder is {comics_folder}')
 
     if date_limit:
-        print(f'Date limit is {date_limit}')
+        print(f'Date limit is {date_limit.strftime("%Y-%m-%d")}')
 
     os.makedirs(comics_folder, exist_ok=True)
     try:
@@ -112,6 +117,9 @@ def parse_params():
         args.outdir = DEFAULT_PATH
     elif not os.path.isabs(args.outdir):
         raise ValueError('Path is not absolute')
+
+    if args.date_limit is None:
+        args.date_limit = parse_date(DEFAULT_DATE)
 
     return args
 

@@ -17,6 +17,8 @@ COOKIES = {
               '__utmb=170251443.1.10.1663662984; __atuvc=9%7C37%2C20%7C38; __atuvs=63297b88232b3e2b000'
 }
 DEFAULT_PATH = 'comics_folder/buttersafe'
+START_TIME = datetime.datetime.now()
+DEFAULT_DATE = (START_TIME - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
 
 
 def get_html(comics_folder, date_limit: datetime, url=HOST):
@@ -29,13 +31,13 @@ def get_html(comics_folder, date_limit: datetime, url=HOST):
         comic_elems = soup.select('#comic')
         for item in comic_elems:
             if not comic_elems and not date_limit:
-                print('Image not found')
+                print('Image not found.')
             else:
                 comic_url = item.find('img').get('src')
                 comic_date = parse_comic_date(soup)  # return comic date in datetime type
 
                 if date_limit and comic_date < date_limit:
-                    print(f'Done. Got date limit')
+                    print(f'Done. Got date limit.')
                     return
 
                 save_comic(comic_url, comics_folder, comic_date)
@@ -87,13 +89,10 @@ def main(comics_folder, date_limit):
     print(f'Comics folder is {comics_folder}')
 
     if date_limit:
-        print(f'Date limit is {date_limit}')
+        print(f'Date limit is {date_limit.strftime("%Y-%m-%d")}')
 
     os.makedirs(comics_folder, exist_ok=True)
     try:
-        # this a last page
-        # url = 'https://www.buttersafe.com/2007/04/03/breakfast-sad-turtle/'
-        # date_limit = datetime.strptime(date_limit, "%Y-%m-%d")  # convert str to datetime
         get_html(comics_folder, date_limit)
     except KeyboardInterrupt:
         print('Forced <buttersafe> program termination!')
@@ -121,6 +120,9 @@ def parse_params():
         args.outdir = DEFAULT_PATH
     elif not os.path.isabs(args.outdir):
         raise ValueError('Path is not absolute')
+
+    if args.date_limit is None:
+        args.date_limit = parse_date(DEFAULT_DATE)
 
     return args
 
