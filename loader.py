@@ -86,7 +86,7 @@ def parse_params():
     """Change the default download folder"""
     parser = argparse.ArgumentParser(prog='loader', description='loader comics')
     parser.add_argument('--outdir', type=str,
-                        default=r'E:\GitHub\Autoloader-comics-schedule\comics_folder',
+                        default=DEFAULT_PATH,
                         help='Output absolut path')
     parser.add_argument('--date_limit', type=valid_date,
                         default=DEFAULT_DATE, help="The Date - format YYYY-MM-DD")
