@@ -8,9 +8,9 @@ import sys
 from os.path import getctime
 from dateutil.parser import parse as parse_date
 
-DESKTOP_PATH = r'E:\Domix\Desktop'
+DESKTOP_PATH = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop')
 NEW_COMICS_INFO_PATH = os.path.join(DESKTOP_PATH, 'new_comics_info.txt')
-DEFAULT_PATH = r'E:\GitHub\Autoloader-comics-schedule\comics_folder'
+DEFAULT_PATH = os.path.join((os.getcwd()), 'comics_folder')
 START_TIME = datetime.datetime.now()
 DEFAULT_DATE = (START_TIME - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
 
