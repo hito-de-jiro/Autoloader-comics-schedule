@@ -1,3 +1,3 @@
 ## Comics loader
-Web scraper to parse images(several website with comics) using Selenium, bs4, lxml. Added multithreading and scheduler. 
+Web scraper to parse images(several website with comics) using Requests, Beautiful Soup, lxml. Added subprocess and scheduler. 
 Download only updates.
