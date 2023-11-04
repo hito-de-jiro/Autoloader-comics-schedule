@@ -109,7 +109,7 @@ def valid_date(s):
 
 
 def parse_params():
-    """Parser parametrs CLI"""
+    """Parser parameters CLI"""
     parser = argparse.ArgumentParser(prog='loader', description='loader comics shit')
     parser.add_argument('--outdir', type=str, default=None, help='Output absolut path')
     parser.add_argument('--date_limit', type=valid_date,

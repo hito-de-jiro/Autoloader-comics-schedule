@@ -1,9 +1,8 @@
-1. Програма перевіряє декілька сайтів веб-коміксів.
-2. Автоматично завантажувати зображення у
-разі оновлення з останньої сесії
-3. Планувалбник може запускати її раз в день
-4. Програма завантажує комікс
-
+1. The program checks several comic websites.
+2. Automatically upload images to
+if updating from the last session
+3. The scheduler can run it once a day
+4. The program downloads the comic
 
 
 1.Buttersafe

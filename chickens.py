@@ -30,7 +30,7 @@ def get_html(comics_folder, date_limit: datetime, url=HOST):
 
             comic_date = parse_date(comic_date, ignoretz=True)
             if date_limit and comic_date < date_limit:
-                print(f'Done. Got date limit')
+                print('Done. Got date limit')
                 return
             save_comic(comic_url, comics_folder, comic_date)
 
