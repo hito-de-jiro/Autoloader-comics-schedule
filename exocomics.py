@@ -31,11 +31,10 @@ def get_html(comics_folder, date_limit, url=HOST):
             comic_link = soup.find('img', class_='image-style-main-comic').get('src')
             comic_url = HOST + comic_link
             comic_date = soup.find('div', class_='date').getText()
-            # print(comic_date)
             comic_date = parse_date(comic_date)
 
             if date_limit and comic_date < date_limit:
-                print(f'Done. Got date limit')
+                print('Done. Got date limit')
                 return
 
             save_comic(comic_url, comics_folder, comic_date)
@@ -56,7 +55,7 @@ def save_comic(comic_url, comics_folder, comic_date, headers=HEADERS):
     res.raise_for_status()
     comic_name = comic_date.strftime("%Y-%m-%d") + '__' + os.path.basename(comic_url)
     image_path = os.path.join(comics_folder, comic_name)
-    if not os.path.isfile(image_path):  # Перевірка існування файлу.
+    if not os.path.isfile(image_path):  # Checking the existence of the file.
         print('Download image... %s' % comic_url)
         image_file = open(image_path, 'wb')
         for chunk in res.iter_content(100_000):

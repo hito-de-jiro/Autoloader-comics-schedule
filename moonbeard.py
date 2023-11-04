@@ -33,7 +33,6 @@ def get_html(url=URL):
                 else:
                     comic_url = item.get('src')
                     print(comic_url)
-                    # _save_comic(comic_url)
 
         except AttributeError:
             print(f"Page {url} -- Image not found")
@@ -57,12 +56,11 @@ def _prev_url(soup):
 
 
 def _save_comic(comic_url, headers=HEADERS):
-    """"""
-    img_link = 'https://moonbeard.com/comics/2022-07-10-MB-2022-07%20Pain.png'
+    """Get URL of image and save file in base folder"""
     res = requests.get(comic_url, headers)
     res.raise_for_status()
     image_path = os.path.join('comics_folder/moonbeard', os.path.basename(comic_url))
-    if not os.path.isfile(image_path):  # Перевірка існування файлу.
+    if not os.path.isfile(image_path):  # Checking the existence of the file.
         print('You have a new comics')
         print('Download image... %s' % comic_url)
         image_file = open(image_path, 'wb')
@@ -72,11 +70,9 @@ def _save_comic(comic_url, headers=HEADERS):
         return True
     else:
         print('No new comics!')
-        # return False
 
 
 def main():
-    # get_html()
     img_link = 'https://moonbeard.com/comics/2022-07-10-MB-2022-07%20Pain.png'
     _save_comic(img_link)
 

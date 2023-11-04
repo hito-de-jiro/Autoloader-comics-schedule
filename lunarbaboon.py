@@ -33,10 +33,9 @@ def get_html(comics_folder, date_limit: datetime, url=HOST):
         res.raise_for_status()
         soup = BeautifulSoup(res.text, 'lxml')
         comics_dict = get_content(soup)
-        # print(comics_urls)
         for comic_date, comic_url in comics_dict.items():
             if date_limit and comic_date < date_limit:
-                print(f'Done. Got date limit')
+                print('Done. Got date limit')
                 return
             save_comic(comic_url, comics_folder, comic_date)
 
@@ -150,6 +149,3 @@ def parse_params():
 if __name__ == '__main__':
     params = parse_params()
     main(comics_folder=params.outdir, date_limit=params.date_limit)
-
-
-# TODO: 2012 year ('.body>p>span>img') and ('.body>p>span>span>img')

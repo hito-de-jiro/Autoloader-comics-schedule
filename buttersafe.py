@@ -1,8 +1,8 @@
-import datetime
 import argparse
-import requests
+import datetime
 import os
 
+import requests
 from bs4 import BeautifulSoup
 from dateutil.parser import parse as parse_date
 
@@ -37,7 +37,7 @@ def get_html(comics_folder, date_limit: datetime, url=HOST):
                 comic_date = parse_comic_date(soup)  # return comic date in datetime type
 
                 if date_limit and comic_date < date_limit:
-                    print(f'Done. Got date limit.')
+                    print('Done. Got date limit.')
                     return
 
                 save_comic(comic_url, comics_folder, comic_date)

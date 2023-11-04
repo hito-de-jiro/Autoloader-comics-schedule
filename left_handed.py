@@ -9,13 +9,12 @@ from dateutil.parser import parse as parse_date
 HOST = 'http://www.lefthandedtoons.com/'
 DEFAULT_PATH = 'comics_folder/left_handed'
 START_TIME = datetime.datetime.now()
-#  DEFAULT_DATE = (START_TIME - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
 DEFAULT_DATE = '2018-01-01'
 
 
 def get_html(comics_folder, date_limit, url=HOST):
     while True:
-        #  завантаженя сторінки
+        #  Download page
         sess = requests.Session()
         res = sess.get(url)
         res.raise_for_status()
@@ -32,7 +31,7 @@ def get_html(comics_folder, date_limit, url=HOST):
             comic_url = comic_elem[0].get('src')
 
             if date_limit and comic_date < date_limit:
-                print(f'Done. Got date limit')
+                print('Done. Got date limit')
                 return
 
             save_comic(comic_url, comics_folder, comic_date)

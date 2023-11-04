@@ -1,8 +1,8 @@
 import argparse
 import datetime
 import os
-import requests
 
+import requests
 from bs4 import BeautifulSoup
 from dateutil.parser import parse as parse_date
 
@@ -127,7 +127,7 @@ def valid_date(s):
 
 
 def parse_params():
-    """Parser parametrs CLI"""
+    """Parser parameters CLI"""
     parser = argparse.ArgumentParser(prog='loader', description='loader comics shit')
     parser.add_argument('--outdir', type=str, default=None, help='Output absolut path')
     parser.add_argument('--date_limit', type=valid_date,
@@ -148,5 +148,3 @@ def parse_params():
 if __name__ == '__main__':
     params = parse_params()
     main(comics_folder=params.outdir, date_limit=params.date_limit)
-
-
